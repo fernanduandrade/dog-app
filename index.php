@@ -1,4 +1,7 @@
 <php
+require('./services/DogService.php');
+
+$dogApi = new DogService();
 
 ?>
 <!DOCTYPE html>
