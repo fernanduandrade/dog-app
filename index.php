@@ -1,9 +1,21 @@
-<php
+<?php
 require('./services/DogService.php');
 
 $dogApi = new DogService();
 
+$dogRandomImg;
+
+if (isset($_GET['breed'])) {
+    $dogBreed = $_GET['breed'];
+    $dogRandomImg = $dogApi->getDogImage($dogBreed);
+
+}
+
+$baseURI = "https://dog.ceo/api/breeds/list/all";
+$dataApi = file_get_contents($baseURI);
+$dogsBreed = json_decode($dataApi);
 ?>
+
 <!DOCTYPE html>
 <html lang="ptbr">
 <head>
@@ -11,34 +23,33 @@ $dogApi = new DogService();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Dog Search</title>
+    <title>Dog App</title>
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">DOG SEARCH</a>
+            <a class="navbar-brand" href="#">DOG APP</a>
         </nav>
     </header>
-
     <div class="container">
-    <hr>
     <div class="row justify-content-center">
         <div class="col-6">
             <div class="card">
+                <h5 class="card-title text-center">Dog-App</h5>
+                <p><?php echo $dogRandomImg, "23213";?></p>
+                <img height="300" src="<?= $dogRandomImg ?? './assets/img/defaultDog.jpg' ?>"
+                     class="card-img-middle" alt="dog padrão">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Dog-App</h5>
                     <form>
                         <fieldset>
                             <div class="form-group ">
                                 <label for="city" class="col-sm-12 col-form-label text-center">Selecione uma
                                     raça</label>
                                 <select class="col-sm-12 col-form-label text-center" name="breed" id="breed">
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    <option value="">3</option>
-                                    <option value="">4</option>
-                                    <option value="">5</option>
+                                    <?php foreach ($dogsBreed->message as $breed => $value) { ?>
+                                        <option value="<?php echo $breed; ?>"><?php echo $breed; ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
 

@@ -2,7 +2,7 @@
 
 class DogService
 {
-    private $baseURI = " https://dog.ceo/api/breeds/list/all";
+    private $baseURI = " https://dog.ceo/api/breed/";
     private $client;
 
     public function __construct() {
@@ -11,17 +11,10 @@ class DogService
         curl_setopt($this->client, CURLOPT_RETURNTRANSFER, true);
     }
 
-    public function getPokemonByName(string $pokemonName): array
+    public function getDogImage(string $breedName): array
     {
-        $uri = $this->baseURI . "/pokemon/$pokemonName";
+        $uri = $this->baseURI . "$breedName/images/random";
         curl_setopt($this->client, CURLOPT_URL, $uri);
         return json_decode(curl_exec($this->client), true);
-    }
-
-    public function getDogByBreed(string $breed): array
-    {
-        $uri = $this->baseURI . "/breed/$breed/images/random";
-        curl_setopt($this->client, CURLOPT_URL, $uri);
-        return json_decode(curl_exec($this->client), true)['pokemon'];
     }
 }
