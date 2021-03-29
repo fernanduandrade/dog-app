@@ -1,22 +1,26 @@
 <?php
 
-$baseURI = "https://dog.ceo/api/breeds/list/all";
-$dataApi = file_get_contents($baseURI);
+$dataApi = file_get_contents("https://dog.ceo/api/breeds/list/all");
 $dogsBreed = json_decode($dataApi);
 
-$dogImg;  
 $randomDogImg;
+$dogImg;
+$inputsText;
 
 if(isset($_GET["breed"])) {
+    $chosenDogName = $_GET["dogName"];
+    $chosenColor = $_GET["color"];
+    $chosenFont = $_GET["font"];
     $breedName = $_GET["breed"];
-    $dogImg = file_get_contents("https://dog.ceo/api/breed/$breedName/images/random");
-    $randomDogImg = json_decode($dogImg);
+    $randomDogImg = file_get_contents("https://dog.ceo/api/breed/$breedName/images/random");
+    $dogImg = json_decode($randomDogImg);
+    $inputsText = "<p style='color: $chosenColor; font-family: $chosenFont; font-weight: bold; font-size: 20px;' class='text-center'>$chosenDogName</p>";
 }
 
 ?>
 
 <!DOCTYPE html>
-<html lang="ptbr">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -64,11 +68,11 @@ body {
                                 <label for="city" class="col-sm-12 col-form-label text-center">Selecione uma
                                     cor</label>
                                 <select class="col-sm-12 col-form-label text-center" name="color" id="color">
-                                    <option value="green">Verde</option>
-                                    <option value="red">Vermelho</option>
-                                    <option value="yellow">Amarelo</option>
-                                    <option value="purple">Roxo</option>
-                                    <option value="orange">Laranja</option>
+                                    <option value="#009900">Verde</option>
+                                    <option value="#FF0000">Vermelho</option>
+                                    <option value="#0000FF">Azul</option>
+                                    <option value="#660066">Roxo</option>
+                                    <option value="#FF6600">Laranja</option>
                                 </select>
                             </div>
 
@@ -92,43 +96,82 @@ body {
                                 </div>
                             </div>
                             <div class="text-center">
-                                <button class="btn btn-primary" onclick="createWrapper()">Salvar</button>
+                                <button class="btn btn-primary" onclick="generate()">Gerar</button>
+                                <button type="button" class="btn btn-primary" onclick="saveData()">Salvar</button>
                             </div>
-
-                            <div id="wrapper-field">
-
-                            </div>
-                           
                         </fieldset>
                     </form>
+                    <hr>
+                    <div id="wrapper-field">
+                        <?=$inputsText?>
+                        <img height="300" width="500" id="dogImg" src="<?=$dogImg->message ?? "./assets/img/defaultDog.jpg"?>"
+                        alt="dogImg">   
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script type="text/javascript">
 
-    document.getElementById("form-submit").addEventListener("click", function(event){
-    event.preventDefault()
-    });
+    const generatedInfo = JSON.parse(localStorage.getItem("generatedImg"));
 
-    function createWrapper() {
+    const dogInfo = JSON.parse(localStorage.getItem("dogData"));
+
+
+    if(dogInfo) {
+        document.getElementById("breed").value = dogInfo.breed;
+        document.getElementById("color").value = dogInfo.color;
+        document.getElementById("font").value = dogInfo.font;
+        document.getElementById("dogName").value = dogInfo.name;
+        document.getElementById("dogImg").src = dogInfo.img;
+    } else if(generatedInfo){
+        document.getElementById("breed").value = generatedInfo.breed;
+        document.getElementById("color").value = generatedInfo.color;
+        document.getElementById("font").value = generatedInfo.font;
+        document.getElementById("dogName").value = generatedInfo.name;
+    }
+                    
+    function generate() {
+        const colorInput = document.getElementById("color").value;
+        const fontInput = document.getElementById("font").value;
+        const dogInput = document.getElementById("dogName").value;
+        const dogBreed = document.getElementById("breed").value;
+;
+
+        let info = {
+            "color": colorInput,
+            "font": fontInput,
+            "name": dogInput,
+            "breed": dogBreed,
+        }
+        
+        return window.localStorage.setItem("generatedImg", JSON.stringify(info));
+    }
+
+    function saveData() {
 
         const colorInput = document.getElementById("color").value;
         const fontInput = document.getElementById("font").value;
         const dogInput = document.getElementById("dogName").value;
+        const dogBreed = document.getElementById("breed").value;
+        const dogImg = document.getElementById("dogImg").src;
 
-        const wrapper = document.getElementById("wrapper-field");
-        const generatedText = `
-        <p style="color: ${colorInput}; font-family: ${fontInput}" class="text-center">${dogInput}</p>
-        <img height="300" src="<?= $randomDogImg->message ?? './assets/img/defaultDog.jpg' ?>"
-        class="card-img-middle" alt="dog padrão">
-        `;
+        let currentTime = new Date();
 
-        wrapper.innerHTML = generatedText;
+        let info = {
+            "color": colorInput,
+            "font": fontInput,
+            "name": dogInput,
+            "breed": dogBreed,
+            "img": dogImg,
+            "date": currentTime
+        }
+        
+        swal("Dados salvos!");
+        return window.localStorage.setItem("dogData", JSON.stringify(info));        
     }
-    
 </script>
 </html>
