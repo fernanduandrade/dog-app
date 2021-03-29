@@ -17,5 +17,5 @@ $ php -S 0.0.0.0:8000
 ```
 No seu navegador entre no seguinte endereço:
 ```text
-localhost:9000
+localhost:8000
 ```

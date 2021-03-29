@@ -6,6 +6,7 @@ $dogsBreed = json_decode($dataApi);
 $randomDogImg;
 $dogImg;
 $inputsText;
+$defaultText = "<p class='text-center' id='text'>Nome do cachorro</p>";
 
 if(isset($_GET["breed"])) {
     $chosenDogName = $_GET["dogName"];
@@ -14,7 +15,7 @@ if(isset($_GET["breed"])) {
     $breedName = $_GET["breed"];
     $randomDogImg = file_get_contents("https://dog.ceo/api/breed/$breedName/images/random");
     $dogImg = json_decode($randomDogImg);
-    $inputsText = "<p style='color: $chosenColor; font-family: $chosenFont; font-weight: bold; font-size: 20px;' class='text-center'>$chosenDogName</p>";
+    $inputsText = "<p style='color: $chosenColor; font-family: $chosenFont; font-weight: bold; font-size: 40px;' class='text-center' id='text'>$chosenDogName</p>";
 }
 
 ?>
@@ -103,7 +104,7 @@ body {
                     </form>
                     <hr>
                     <div id="wrapper-field">
-                        <?=$inputsText?>
+                        <?=$inputsText ?? $defaultText?>
                         <img height="300" width="500" id="dogImg" src="<?=$dogImg->message ?? "./assets/img/defaultDog.jpg"?>"
                         alt="dogImg">   
                     </div>
@@ -119,7 +120,7 @@ body {
     const generatedInfo = JSON.parse(localStorage.getItem("generatedImg"));
 
     const dogInfo = JSON.parse(localStorage.getItem("dogData"));
-
+    console.log(dogInfo);
 
     if(dogInfo) {
         document.getElementById("breed").value = dogInfo.breed;
