@@ -1,19 +1,19 @@
 <?php
-require('./services/DogService.php');
-
-$dogApi = new DogService();
-
-$dogRandomImg;
-
-if (isset($_GET['breed'])) {
-    $dogBreed = $_GET['breed'];
-    $dogRandomImg = $dogApi->getDogImage($dogBreed);
-
-}
 
 $baseURI = "https://dog.ceo/api/breeds/list/all";
 $dataApi = file_get_contents($baseURI);
 $dogsBreed = json_decode($dataApi);
+
+$dogImg;  
+$randomDogImg;
+
+if(isset($_GET["breed"])) {
+    $breedName = $_GET["breed"];
+    $dogImg = file_get_contents("https://dog.ceo/api/breed/$breedName/images/random");
+    $randomDogImg = json_decode($dogImg);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -37,11 +37,10 @@ $dogsBreed = json_decode($dataApi);
         <div class="col-6">
             <div class="card">
                 <h5 class="card-title text-center">Dog-App</h5>
-                <p><?php echo $dogRandomImg, "23213";?></p>
-                <img height="300" src="<?= $dogRandomImg ?? './assets/img/defaultDog.jpg' ?>"
+                <img height="300" src="<?= $randomDogImg->message ?? './assets/img/defaultDog.jpg' ?>"
                      class="card-img-middle" alt="dog padrão">
                 <div class="card-body">
-                    <form>
+                    <form >
                         <fieldset>
                             <div class="form-group ">
                                 <label for="city" class="col-sm-12 col-form-label text-center">Selecione uma
@@ -52,16 +51,19 @@ $dogsBreed = json_decode($dataApi);
                                     <?php } ?>
                                 </select>
                             </div>
+                            <div class="text-center">
+                                <button class="btn btn-primary">Gerar Imagem</button>
+                            </div>
 
                             <div class="form-group ">
                                 <label for="city" class="col-sm-12 col-form-label text-center">Selecione uma
                                     cor</label>
                                 <select class="col-sm-12 col-form-label text-center" name="color" id="color">
-                                    <option value="">Verde</option>
-                                    <option value="">Open Sans</option>
-                                    <option value="">Amarelo</option>
-                                    <option value="">Oswald</option>
-                                    <option value="">Montserrat</option>
+                                    <option value="green">Verde</option>
+                                    <option value="red">Vermelho</option>
+                                    <option value="yellow">Amarelo</option>
+                                    <option value="purple">Roxo</option>
+                                    <option value="">Laranja</option>
                                 </select>
                             </div>
 
@@ -69,15 +71,15 @@ $dogsBreed = json_decode($dataApi);
                                 <label for="city" class="col-sm-12 col-form-label text-center">Selecione uma
                                     fonte</label>
                                 <select class="col-sm-12 col-form-label text-center" name="font" id="font">
-                                    <option value="">Roboto</option>
-                                    <option value="">Open Sans</option>
-                                    <option value="">Lato</option>
-                                    <option value="">Oswald</option>
-                                    <option value="">Montserrat</option>
+                                    <option value="Roboto">Roboto</option>
+                                    <option value="Open Sans">Open Sans</option>
+                                    <option value="Lato">Lato</option>
+                                    <option value="Oswald">Oswald</option>
+                                    <option value="Montserrat">Montserrat</option>
                                 </select>
                             </div>
 
-                            <div class="form-group ">
+                            <div class="form-group">
                                 <label for="city" class="col-sm-12 col-form-label text-center">Escolha um nome do cachorro</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control text-center" id="dog" name="dog"
@@ -85,8 +87,10 @@ $dogsBreed = json_decode($dataApi);
                                 </div>
                             </div>
                             <div class="text-center">
-                                <button class="btn btn-primary ">Salvar</button>
+                                <button class="btn btn-primary">Salvar</button>
                             </div>
+
+                           
                         </fieldset>
                     </form>
                 </div>
@@ -95,7 +99,13 @@ $dogsBreed = json_decode($dataApi);
     </div>
 </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {    
+        $("#submit").click(function(event) {            
+            event.preventDefault();
+            alert("ACTION IS PREVENTED");
+        });
+    });
+</script>
 </html>
